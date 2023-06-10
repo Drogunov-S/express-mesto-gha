@@ -18,7 +18,7 @@ const createCard = (req, res) => {
   const card = req.body;
   card.owner = req.user._id;
   Card.create(card)
-    .then(({ _id }) => res.send({ id: _id }))
+    .then((cardFromDb) => res.send(cardFromDb))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: err.message });
@@ -31,10 +31,14 @@ const createCard = (req, res) => {
 const deleteCardById = (req, res) => {
   const { id } = req.params;
   Card.findByIdAndDelete(id)
+    .orFail(new Error(ERROR_NOT_FOUND))
     .then((deletedLine) => res.send(deletedLine))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
+        res.status(ERROR_CODE_400).send({ message: err.message });
+      } else if (err.message === ERROR_NOT_FOUND) {
+        res.status(ERROR_CODE_404)
+          .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(CARD_RU, id) });
       } else {
         res.status(ERROR_CODE_500).send({ message: err.message });
       }
