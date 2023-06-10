@@ -16,6 +16,7 @@ const getCards = (req, res) => {
 };
 const createCard = (req, res) => {
   const card = req.body;
+  card.owner = req.user._id;
   Card.create(card)
     .then(({ _id }) => res.send({ id: _id }))
     .catch((err) => {
@@ -35,7 +36,7 @@ const deleteCardById = (req, res) => {
       if (err.name === 'CastError') {
         res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
       } else {
-        res.status(ERROR_CODE_500).send({ message: err });
+        res.status(ERROR_CODE_500).send({ message: err.message });
       }
     });
 };
@@ -53,7 +54,7 @@ const addLike = (req, res) => {
         res.status(ERROR_CODE_404)
           .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(CARD_RU, id) });
       } else {
-        res.status(ERROR_CODE_500).send({ message: err });
+        res.status(ERROR_CODE_500).send({ message: err.message });
       }
     });
 };
@@ -75,7 +76,7 @@ const removeLike = (req, res) => {
         res.status(ERROR_CODE_404)
           .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(CARD_RU, id) });
       } else {
-        res.status(ERROR_CODE_500).send({ message: err });
+        res.status(ERROR_CODE_500).send({ message: err.message });
       }
     });
 };
