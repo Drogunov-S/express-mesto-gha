@@ -13,5 +13,3 @@ module.exports.ERR_MESSAGE_MIN_VALID_USER_ABOUT = 'О себе должно бы
 module.exports.ERR_MESSAGE_MAX_VALID_USER_ABOUT = 'О себе должно быть не более 30 символов';
 
 module.exports.ERR_MESSAGE_FORBIDDEN_DATA_REQUEST = 'Переданы некорректные данные';
-
-
