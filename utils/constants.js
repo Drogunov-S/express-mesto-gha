@@ -1,4 +1,5 @@
-module.exports.USERS_RU = 'Пользователя';
+module.exports.USER_RU = 'Пользователя';
+module.exports.CARD_RU = 'Карточки';
 module.exports.CODE_201 = 201;
 module.exports.CODE_202 = 202;
 module.exports.ERROR_CODE_400 = 400;

@@ -1,6 +1,12 @@
 const Card = require('../models/card');
 const {
-  ERROR_CODE_500, CODE_201, CODE_202, ERROR_CODE_400, ERR_MESSAGE_FORBIDDEN_DATA_REQUEST,
+  ERROR_CODE_500,
+  CODE_201,
+  ERROR_CODE_400,
+  ERR_MESSAGE_FORBIDDEN_DATA_REQUEST,
+  ERR_MESSAGE_FORBIDDEN_ELEMENT_ID, CARD_RU,
+  ERROR_NOT_FOUND,
+  ERROR_CODE_404,
 } = require('../utils/constants');
 
 const getCards = (req, res) => {
@@ -12,7 +18,7 @@ const getCards = (req, res) => {
 const createCard = (req, res) => {
   const card = req.body;
   Card.create(card)
-    .then((cards) => res.status(CODE_201).send(cards))
+    .then(({ _id }) => res.status(CODE_201).send({ _id }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: err.message });
@@ -39,10 +45,14 @@ const addLike = (req, res) => {
   const { userId } = req.body;
   const { id } = req.params;
   Card.findByIdAndUpdate(id, { $addToSet: { likes: userId } }, { new: true })
-    .then((card) => res.status(CODE_202).send(card))
+    .orFail(new Error(ERROR_NOT_FOUND))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
+      } else if (err.message === ERROR_NOT_FOUND) {
+        res.status(ERROR_CODE_404)
+          .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(CARD_RU, id) });
       } else {
         res.status(ERROR_CODE_500).send({ message: err });
       }
@@ -57,10 +67,14 @@ const removeLike = (req, res) => {
     { $pull: { likes: userId } }, // убрать _id из массива
     { new: true },
   )
+    .orFail(new Error(ERROR_NOT_FOUND))
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
+      } else if (err.message === ERROR_NOT_FOUND) {
+        res.status(ERROR_CODE_404)
+          .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(CARD_RU, id) });
       } else {
         res.status(ERROR_CODE_500).send({ message: err });
       }

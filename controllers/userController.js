@@ -2,13 +2,12 @@ const User = require('../models/user');
 const {
   ERROR_CODE_500,
   CODE_201,
-  CODE_202,
   ERROR_CODE_400,
   ERR_MESSAGE_FORBIDDEN_DATA_REQUEST,
   ERROR_NOT_FOUND,
   ERR_MESSAGE_FORBIDDEN_ELEMENT_ID,
   ERROR_CODE_404,
-  USERS_RU,
+  USER_RU,
 } = require('../utils/constants');
 
 const getUsers = (req, res) => {
@@ -27,7 +26,7 @@ const getUserById = (req, res) => {
         res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else if (err.message === ERROR_NOT_FOUND) {
         res.status(ERROR_CODE_404)
-          .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(USERS_RU, id) });
+          .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(USER_RU, id) });
       } else {
         res.status(ERROR_CODE_500).send({ message: err.message });
       }
@@ -61,7 +60,7 @@ const updateUserById = (req, res) => {
       runValidators: true,
     },
   )
-    .then((updatedUser) => res.status(CODE_202).send(updatedUser))
+    .then((updatedUser) => res.send(updatedUser))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: err.message });
@@ -82,7 +81,7 @@ const updateAvatarById = (req, res) => {
       runValidators: true,
     },
   )
-    .then((updatedUser) => res.status(CODE_202).send(updatedUser))
+    .then((updatedUser) => res.send(updatedUser))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: err.message });
