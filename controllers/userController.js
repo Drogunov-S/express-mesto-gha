@@ -65,7 +65,7 @@ const updateUserById = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: err.message });
       } else if (err.name === 'CastError') {
-        res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
+        res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else {
         res.status(ERROR_CODE_500).send({ message: err });
       }
@@ -86,7 +86,7 @@ const updateAvatarById = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: err.message });
       } else if (err.name === 'CastError') {
-        res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
+        res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else {
         res.status(ERROR_CODE_500).send({ message: err });
       }
