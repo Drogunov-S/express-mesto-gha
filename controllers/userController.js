@@ -8,6 +8,8 @@ const {
   ERR_MESSAGE_FORBIDDEN_ELEMENT_ID,
   ERROR_CODE_404,
   USER_RU,
+  ERROR_CAST,
+  ERROR_VALIDATION,
 } = require('../utils/constants');
 
 const getUsers = (req, res) => {
@@ -22,7 +24,7 @@ const getUserById = (req, res) => {
     .orFail(new Error(ERROR_NOT_FOUND))
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === ERROR_CAST) {
         res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else if (err.message === ERROR_NOT_FOUND) {
         res.status(ERROR_CODE_404)
@@ -37,12 +39,9 @@ const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then((user) => {
-      console.log('User created');
-      res.status(CODE_201).send(user);
-    })
+    .then((user) => res.status(CODE_201).send(user))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === ERROR_VALIDATION) {
         res.status(ERROR_CODE_400).send({ message: err.message });
       } else {
         res.status(ERROR_CODE_500).send({ message: err.message });
@@ -63,9 +62,9 @@ const updateUserById = (req, res) => {
   )
     .then((updatedUser) => res.send(updatedUser))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === ERROR_VALIDATION) {
         res.status(ERROR_CODE_400).send({ message: err.message });
-      } else if (err.name === 'CastError') {
+      } else if (err.name === ERROR_CAST) {
         res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else {
         res.status(ERROR_CODE_500).send({ message: err });
@@ -85,9 +84,9 @@ const updateAvatarById = (req, res) => {
   )
     .then((updatedUser) => res.send(updatedUser))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === ERROR_VALIDATION) {
         res.status(ERROR_CODE_400).send({ message: err.message });
-      } else if (err.name === 'CastError') {
+      } else if (err.name === ERROR_CAST) {
         res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else {
         res.status(ERROR_CODE_500).send({ message: err });

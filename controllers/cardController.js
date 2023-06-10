@@ -3,9 +3,13 @@ const {
   ERROR_CODE_500,
   ERROR_CODE_400,
   ERR_MESSAGE_FORBIDDEN_DATA_REQUEST,
-  ERR_MESSAGE_FORBIDDEN_ELEMENT_ID, CARD_RU,
+  ERR_MESSAGE_FORBIDDEN_ELEMENT_ID,
+  CARD_RU,
   ERROR_NOT_FOUND,
   ERROR_CODE_404,
+  CODE_201,
+  ERROR_VALIDATION,
+  ERROR_CAST,
 } = require('../utils/constants');
 
 const getCards = (req, res) => {
@@ -18,9 +22,9 @@ const createCard = (req, res) => {
   const card = req.body;
   card.owner = req.user._id;
   Card.create(card)
-    .then((cardFromDb) => res.send(cardFromDb))
+    .then((cardFromDb) => res.status(CODE_201).send(cardFromDb))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === ERROR_VALIDATION) {
         res.status(ERROR_CODE_400).send({ message: err.message });
       } else {
         res.status(ERROR_CODE_500).send({ message: err.message });
@@ -34,7 +38,7 @@ const deleteCardById = (req, res) => {
     .orFail(new Error(ERROR_NOT_FOUND))
     .then((deletedLine) => res.send(deletedLine))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === ERROR_CAST) {
         res.status(ERROR_CODE_400).send({ message: err.message });
       } else if (err.message === ERROR_NOT_FOUND) {
         res.status(ERROR_CODE_404)
@@ -52,7 +56,7 @@ const addLike = (req, res) => {
     .orFail(new Error(ERROR_NOT_FOUND))
     .then((card) => res.send(card))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === ERROR_CAST) {
         res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else if (err.message === ERROR_NOT_FOUND) {
         res.status(ERROR_CODE_404)
@@ -74,7 +78,7 @@ const removeLike = (req, res) => {
     .orFail(new Error(ERROR_NOT_FOUND))
     .then((card) => res.send(card))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === ERROR_CAST) {
         res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else if (err.message === ERROR_NOT_FOUND) {
         res.status(ERROR_CODE_404)
