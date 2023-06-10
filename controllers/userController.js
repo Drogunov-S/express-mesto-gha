@@ -5,6 +5,10 @@ const {
   CODE_202,
   ERROR_CODE_400,
   ERR_MESSAGE_FORBIDDEN_DATA_REQUEST,
+  ERROR_NOT_FOUND,
+  ERR_MESSAGE_FORBIDDEN_ELEMENT_ID,
+  ERROR_CODE_404,
+  USERS_RU,
 } = require('../utils/constants');
 
 const getUsers = (req, res) => {
@@ -16,12 +20,16 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   const { id } = req.params;
   User.findById(id)
+    .orFail(new Error(ERROR_NOT_FOUND))
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
+        res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
+      } else if (err.message === ERROR_NOT_FOUND) {
+        res.status(ERROR_CODE_404)
+          .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(USERS_RU, id) });
       } else {
-        res.status(ERROR_CODE_500).send({ message: err });
+        res.status(ERROR_CODE_500).send({ message: err.message });
       }
     });
 };
@@ -45,10 +53,19 @@ const createUser = (req, res) => {
 
 const updateUserById = (req, res) => {
   const { _id, name, about } = req.body;
-  User.findByIdAndUpdate(_id, { name, about })
+  User.findByIdAndUpdate(
+    _id,
+    { name, about },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
     .then((updatedUser) => res.status(CODE_202).send(updatedUser))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
+        res.status(ERROR_CODE_400).send({ message: err.message });
+      } else if (err.name === 'CastError') {
         res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
       } else {
         res.status(ERROR_CODE_500).send({ message: err });
@@ -57,10 +74,19 @@ const updateUserById = (req, res) => {
 };
 const updateAvatarById = (req, res) => {
   const { _id, avatar } = req.body;
-  User.findByIdAndUpdate(_id, { avatar })
+  User.findByIdAndUpdate(
+    _id,
+    { avatar },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
     .then((updatedUser) => res.status(CODE_202).send(updatedUser))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
+        res.status(ERROR_CODE_400).send({ message: err.message });
+      } else if (err.name === 'CastError') {
         res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
       } else {
         res.status(ERROR_CODE_500).send({ message: err });
