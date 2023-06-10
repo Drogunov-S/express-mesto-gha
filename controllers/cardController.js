@@ -1,7 +1,6 @@
 const Card = require('../models/card');
 const {
   ERROR_CODE_500,
-  CODE_201,
   ERROR_CODE_400,
   ERR_MESSAGE_FORBIDDEN_DATA_REQUEST,
   ERR_MESSAGE_FORBIDDEN_ELEMENT_ID, CARD_RU,
@@ -18,7 +17,7 @@ const getCards = (req, res) => {
 const createCard = (req, res) => {
   const card = req.body;
   Card.create(card)
-    .then(({ _id }) => res.status(CODE_201).send({ _id }))
+    .then(({ _id }) => res.send({ id: _id }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE_400).send({ message: err.message });
@@ -42,14 +41,14 @@ const deleteCardById = (req, res) => {
 };
 
 const addLike = (req, res) => {
-  const { userId } = req.body;
+  const { _id } = req.user;
   const { id } = req.params;
-  Card.findByIdAndUpdate(id, { $addToSet: { likes: userId } }, { new: true })
+  Card.findByIdAndUpdate(id, { $addToSet: { likes: _id } }, { new: true })
     .orFail(new Error(ERROR_NOT_FOUND))
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
+        res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else if (err.message === ERROR_NOT_FOUND) {
         res.status(ERROR_CODE_404)
           .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(CARD_RU, id) });
@@ -60,18 +59,18 @@ const addLike = (req, res) => {
 };
 
 const removeLike = (req, res) => {
-  const { userId } = req.body;
+  const { _id } = req.user;
   const { id } = req.params;
   Card.findByIdAndUpdate(
     id,
-    { $pull: { likes: userId } }, // убрать _id из массива
+    { $pull: { likes: _id } }, // убрать _id из массива
     { new: true },
   )
     .orFail(new Error(ERROR_NOT_FOUND))
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
+        res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
       } else if (err.message === ERROR_NOT_FOUND) {
         res.status(ERROR_CODE_404)
           .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(CARD_RU, id) });

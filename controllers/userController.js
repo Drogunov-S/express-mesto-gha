@@ -51,7 +51,8 @@ const createUser = (req, res) => {
 };
 
 const updateUserById = (req, res) => {
-  const { _id, name, about } = req.body;
+  const { _id } = req.user;
+  const { name, about } = req.body;
   User.findByIdAndUpdate(
     _id,
     { name, about },
@@ -72,7 +73,8 @@ const updateUserById = (req, res) => {
     });
 };
 const updateAvatarById = (req, res) => {
-  const { _id, avatar } = req.body;
+  const { _id } = req.user;
+  const { avatar } = req.body;
   User.findByIdAndUpdate(
     _id,
     { avatar },
@@ -94,5 +96,5 @@ const updateAvatarById = (req, res) => {
 };
 
 module.exports = {
-  getUsers, getUserById, createUser, updateUser: updateUserById, updateAvatar: updateAvatarById,
+  getUsers, getUserById, createUser, updateUserById, updateAvatar: updateAvatarById,
 };
