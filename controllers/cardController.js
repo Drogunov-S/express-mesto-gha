@@ -15,7 +15,7 @@ const createCard = (req, res) => {
     .then((cards) => res.status(CODE_201).send(cards))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE_400).send(ERR_MESSAGE_FORBIDDEN_DATA_REQUEST);
+        res.status(ERROR_CODE_400).send({ message: err.message });
       } else {
         res.status(ERROR_CODE_500).send({ message: err.message });
       }

@@ -35,8 +35,11 @@ const createUser = (req, res) => {
       res.status(CODE_201).send(user);
     })
     .catch((err) => {
-      console.log('error create user');
-      res.status(ERROR_CODE_500).send({ message: err });
+      if (err.name === 'ValidationError') {
+        res.status(ERROR_CODE_400).send({ message: err.message });
+      } else {
+        res.status(ERROR_CODE_500).send({ message: err.message });
+      }
     });
 };
 
