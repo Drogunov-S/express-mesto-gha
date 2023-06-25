@@ -32,6 +32,10 @@ const createCard = (req, res) => {
     });
 };
 
+/* TODO:
+9. Проконтролируйте права
+У пользователя не должно быть возможности удалять карточки других пользователей.
+* */
 const deleteCardById = (req, res) => {
   const { id } = req.params;
   Card.findByIdAndDelete(id)

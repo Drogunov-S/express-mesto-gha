@@ -1,99 +1,105 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
-  ERROR_CODE_500,
   CODE_201,
-  ERROR_CODE_400,
-  ERR_MESSAGE_FORBIDDEN_DATA_REQUEST,
-  ERROR_NOT_FOUND,
   ERR_MESSAGE_FORBIDDEN_ELEMENT_ID,
-  ERROR_CODE_404,
   USER_RU,
-  ERROR_CAST,
   ERROR_VALIDATION,
+  ERROR_CODE_409_MESSAGE,
+  ACCESS_AUTH_RU,
+  ERROR_CODE_11000,
 } = require('../utils/constants');
+const RegEmailException = require('../exceptions/regEmailException');
+const UserNotFoundException = require('../exceptions/userNotFoundException');
+const {
+  JWT_SECRET, COOKIE_LIAVE_TIME, HTTP_ONLY, JWT_EXPIRES_IN, JWT_NAME_FIELD, HASH_SALT,
+} = require('../utils/config');
+const DataException = require('../exceptions/dataException');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => res.status(ERROR_CODE_500).send({ message: err }));
+    .catch(next);
 };
 
-const getUserById = (req, res) => {
-  const { id } = req.params;
+const findUserById = (req, res, next, id) => {
   User.findById(id)
-    .orFail(new Error(ERROR_NOT_FOUND))
+    .orFail(new UserNotFoundException(ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(USER_RU, id)))
     .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === ERROR_CAST) {
-        res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
-      } else if (err.message === ERROR_NOT_FOUND) {
-        res.status(ERROR_CODE_404)
-          .send({ message: ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(USER_RU, id) });
-      } else {
-        res.status(ERROR_CODE_500).send({ message: err.message });
-      }
-    });
+    .catch(next);
 };
 
-const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+const getAboutMe = (req, res, next) => {
+  const { _id } = req.user;
+  findUserById(req, res, next, _id);
+};
 
-  User.create({ name, about, avatar })
+const getUserById = (req, res, next) => {
+  const { id } = req.params;
+  findUserById(req, res, next, id);
+};
+
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  User.findByEmailCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN },
+      );
+      res.cookie(JWT_NAME_FIELD, token, { maxAge: COOKIE_LIAVE_TIME, httpOnly: HTTP_ONLY })
+        .send({ message: ACCESS_AUTH_RU });
+    }).catch((next));
+};
+
+const createUser = (req, res, next) => {
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+
+  bcrypt.hash(password, HASH_SALT)
+    .then((hash) => {
+      User.create({
+        name, about, avatar, email, password: hash,
+      });
+    })
     .then((user) => res.status(CODE_201).send(user))
     .catch((err) => {
-      if (err.name === ERROR_VALIDATION) {
-        res.status(ERROR_CODE_400).send({ message: err.message });
+      if (err.code === ERROR_CODE_11000) {
+        next(new RegEmailException(ERROR_CODE_409_MESSAGE));
+      } else if (err.name === ERROR_VALIDATION) {
+        next(new DataException(err.message));
       } else {
-        res.status(ERROR_CODE_500).send({ message: err.message });
+        next(err);
       }
     });
 };
 
-const updateUserById = (req, res) => {
+const updateUser = (req, res, next, userData) => {
   const { _id } = req.user;
-  const { name, about } = req.body;
-  User.findByIdAndUpdate(
-    _id,
-    { name, about },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
+  User.findByIdAndUpdate(_id, userData, { new: true, runValidators: true })
     .then((updatedUser) => res.send(updatedUser))
     .catch((err) => {
       if (err.name === ERROR_VALIDATION) {
-        res.status(ERROR_CODE_400).send({ message: err.message });
-      } else if (err.name === ERROR_CAST) {
-        res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
+        next(new DataException(err.message));
       } else {
-        res.status(ERROR_CODE_500).send({ message: err });
+        next(err);
       }
     });
 };
-const updateAvatarById = (req, res) => {
-  const { _id } = req.user;
+
+const updateUserById = (req, res, next) => {
+  const { name, about } = req.body;
+  updateUser(req, res, next, { name, about });
+};
+const updateAvatarById = (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(
-    _id,
-    { avatar },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .then((updatedUser) => res.send(updatedUser))
-    .catch((err) => {
-      if (err.name === ERROR_VALIDATION) {
-        res.status(ERROR_CODE_400).send({ message: err.message });
-      } else if (err.name === ERROR_CAST) {
-        res.status(ERROR_CODE_400).send({ message: ERR_MESSAGE_FORBIDDEN_DATA_REQUEST });
-      } else {
-        res.status(ERROR_CODE_500).send({ message: err });
-      }
-    });
+  updateUser(req, res, next, { avatar });
 };
 
 module.exports = {
-  getUsers, getUserById, createUser, updateUserById, updateAvatar: updateAvatarById,
+  getUsers, getUserById, login, createUser, updateUserById, updateAvatarById, getAboutMe,
 };
