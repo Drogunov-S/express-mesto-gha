@@ -6,10 +6,10 @@ const {
 const { JWT_SECRET } = require('../utils/config');
 
 module.exports.auth = (req, res, next) => {
-  const { token } = req.cookie;
   let payload;
 
   try {
+    const { token } = req.cookie;
     if (!token) {
       return next(new AuthException(ERR_MESSAGE_NO_AUTH));
     }
