@@ -11,12 +11,12 @@ const {
   ERROR_CODE_11000,
 } = require('../utils/constants');
 const RegEmailException = require('../exceptions/regEmailException');
-const UserNotFoundException = require('../exceptions/userNotFoundException');
+const NotFoundException = require('../exceptions/notFoundException');
 const {
   JWT_SECRET, COOKIE_LIAVE_TIME, HTTP_ONLY, JWT_EXPIRES_IN, JWT_NAME_FIELD, HASH_SALT,
 } = require('../utils/config');
 const DataException = require('../exceptions/dataException');
-const AuthException = require("../exceptions/authException");
+const AuthException = require('../exceptions/authException');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -26,7 +26,7 @@ const getUsers = (req, res, next) => {
 
 const findUserById = (req, res, next, id) => {
   User.findById(id)
-    .orFail(new UserNotFoundException(ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(USER_RU, id)))
+    .orFail(new NotFoundException(ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(USER_RU, id)))
     .then((user) => res.send(user))
     .catch(next);
 };
@@ -61,7 +61,7 @@ const createUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  bcrypt.hash(password, 10)
+  bcrypt.hash(password, HASH_SALT)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
