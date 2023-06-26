@@ -16,6 +16,7 @@ const {
   JWT_SECRET, COOKIE_LIAVE_TIME, HTTP_ONLY, JWT_EXPIRES_IN, JWT_NAME_FIELD, HASH_SALT,
 } = require('../utils/config');
 const DataException = require('../exceptions/dataException');
+const AuthException = require("../exceptions/authException");
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -69,7 +70,7 @@ const createUser = (req, res, next) => {
       if (err.code === ERROR_CODE_11000) {
         next(new RegEmailException(ERROR_CODE_409_MESSAGE));
       } else if (err.name === ERROR_VALIDATION) {
-        next(new DataException(err.message));
+        next(new AuthException(err.message));
       } else {
         next(err);
       }

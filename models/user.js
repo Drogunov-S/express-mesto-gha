@@ -8,7 +8,7 @@ const {
   ERR_MESSAGE_MAX_VALID_USER_ABOUT,
   ERROR_CODE_401_MESSAGE,
 } = require('../utils/constants');
-const NoAuthException = require('../exceptions/noAuthException');
+const NoAuthException = require('../exceptions/authException');
 const { DEFAULT_USER_NAME, DEFAULT_USER_ABOUT } = require('../utils/config');
 const validator = require('validator');
 
