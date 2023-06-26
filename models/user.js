@@ -7,10 +7,10 @@ const {
   ERR_MESSAGE_MAX_VALID_USER_NAME,
   ERR_MESSAGE_MIN_VALID_USER_ABOUT,
   ERR_MESSAGE_MAX_VALID_USER_ABOUT,
-  ERROR_CODE_401_MESSAGE,
+  ERR_MESSAGE_BAD_AUTH,
 } = require('../utils/constants');
-const AuthException = require('../exceptions/authException');
 const { DEFAULT_USER_NAME, DEFAULT_USER_ABOUT } = require('../utils/config');
+const NotFoundException = require('../exceptions/notFoundException');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -44,8 +44,8 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
     select: false,
+    required: true,
   },
 }, { versionKey: false });
 
@@ -56,16 +56,23 @@ userSchema.statics.findByEmailCredentials = function (email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new AuthException(ERROR_CODE_401_MESSAGE));
+        return Promise.reject(new NotFoundException(ERR_MESSAGE_BAD_AUTH));
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new AuthException(ERROR_CODE_401_MESSAGE));
+            return Promise.reject(new NotFoundException(ERR_MESSAGE_BAD_AUTH));
           }
           return user;
         });
     });
+};
+
+// eslint-disable-next-line func-names
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
 };
 
 module.exports = mongoose.model('user', userSchema);

@@ -9,7 +9,7 @@ module.exports.auth = (req, res, next) => {
   let payload;
 
   try {
-    const { token } = req.cookie;
+    const { token } = req.cookies;
     if (!token) {
       return next(new AuthException(ERR_MESSAGE_NO_AUTH));
     }
