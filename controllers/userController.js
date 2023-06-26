@@ -70,7 +70,7 @@ const createUser = (req, res, next) => {
       if (err.code === ERROR_CODE_11000) {
         next(new RegEmailException(ERROR_CODE_409_MESSAGE));
       } else if (err.name === ERROR_VALIDATION) {
-        next(new AuthException(err.message));
+        next(new DataException(err.message));
       } else {
         next(err);
       }
