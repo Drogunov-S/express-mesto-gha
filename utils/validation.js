@@ -7,5 +7,3 @@ module.exports.validateUserAvatar = celebrate({
     avatar: Joi.string().pattern(regex).required(),
   }),
 });
-
-

@@ -1,4 +1,4 @@
-const { ERROR_CODE_400} = require('../utils/constants');
+const { ERROR_CODE_400 } = require('../utils/constants');
 
 class DataException extends Error {
   constructor(message) {

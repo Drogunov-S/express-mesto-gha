@@ -15,7 +15,7 @@ const {
   ROUTE_PATH_USER_ME_AVATAR,
 } = require('../utils/constants');
 
-router.get(ROUTE_PATH_USER_ME, getAboutMe)
+router.get(ROUTE_PATH_USER_ME, getAboutMe);
 router.get(ROUTE_PATH_USERS, getUsers);
 router.get(ROUTE_PATH_USERS_ID, getUserById);
 router.post(ROUTE_PATH_USERS, createUser);
