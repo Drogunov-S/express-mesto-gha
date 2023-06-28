@@ -25,7 +25,7 @@ const limiter = rateLimit.rateLimit({
 });
 
 app.use(express.json());
-app.use(helmet);
+app.use(helmet());
 app.use(cookieParser());
 app.use(limiter);
 mongoose.connect(`${DB_URL}:${DB_PORT}/${DB_SCHEMA}`, {
