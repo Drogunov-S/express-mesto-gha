@@ -13,7 +13,12 @@ const {
 const RegEmailException = require('../exceptions/regEmailException');
 const NotFoundException = require('../exceptions/notFoundException');
 const {
-  JWT_SECRET, COOKIE_LIAVE_TIME, HTTP_ONLY, JWT_EXPIRES_IN, JWT_NAME_FIELD, HASH_SALT,
+  JWT_SECRET,
+  COOKIE_LIAVE_TIME,
+  HTTP_ONLY,
+  JWT_EXPIRES_IN,
+  JWT_NAME_FIELD,
+  HASH_SALT,
 } = require('../utils/config');
 const DataException = require('../exceptions/dataException');
 

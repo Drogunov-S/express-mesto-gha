@@ -5,6 +5,8 @@ const {
   ERROR_NOT_FOUND,
   CODE_201,
   ERROR_VALIDATION,
+  MESSAGE_CARD_DELETE,
+  ERR_MESSAGE_DELETE_OTHER_CARD,
 } = require('../utils/constants');
 const NotFoundException = require('../exceptions/notFoundException');
 const DataException = require('../exceptions/dataException');
@@ -38,10 +40,10 @@ const deleteCardById = (req, res, next) => {
     .orFail(new NotFoundException(ERR_MESSAGE_FORBIDDEN_ELEMENT_ID(CARD_RU, id)))
     .then((card) => {
       if (card.owner.toString() !== _id) {
-        return Promise.reject(new NotAccessException('Нельзя удалить карточки других пользователей'));
+        return Promise.reject(new NotAccessException(ERR_MESSAGE_DELETE_OTHER_CARD));
       }
       return Card.deleteOne(card)
-        .then(() => res.send({ message: 'Пост удален' }));
+        .then(() => res.send({ message: MESSAGE_CARD_DELETE }));
     })
     .catch(next);
 };
@@ -60,7 +62,7 @@ const removeLike = (req, res, next) => {
   const { id } = req.params;
   Card.findByIdAndUpdate(
     id,
-    { $pull: { likes: _id } }, // убрать _id из массива
+    { $pull: { likes: _id } },
     { new: true },
   )
     .orFail(new NotFoundException(ERROR_NOT_FOUND))

@@ -2,6 +2,7 @@ module.exports.USER_RU = 'Пользователя';
 module.exports.CARD_RU = 'Карточки';
 module.exports.PAGE_NOT_FOUND_RU = 'Страница не найдена';
 module.exports.ACCESS_AUTH_RU = 'Вы вошли в систему';
+module.exports.MESSAGE_CARD_DELETE = 'Пост удален';
 
 module.exports.CODE_201 = 201;
 module.exports.CODE_202 = 202;
@@ -26,6 +27,7 @@ module.exports.ERR_MESSAGE_MAX_VALID_CARD_NAME = 'Название должно 
 module.exports.ERR_MESSAGE_MIN_VALID_USER_NAME = 'Имя должно быть не менее 2 символов';
 module.exports.ERR_MESSAGE_MAX_VALID_USER_NAME = 'Имя должно быть не более 30 символов';
 module.exports.ERR_MESSAGE_MIN_VALID_USER_ABOUT = 'О себе должно быть не менее 2 символов';
+module.exports.ERR_MESSAGE_DELETE_OTHER_CARD = 'Нельзя удалить карточки других пользователей';
 
 module.exports.ERR_MESSAGE_MAX_VALID_USER_ABOUT = 'О себе должно быть не более 30 символов';
 module.exports.ERR_MESSAGE_FORBIDDEN_DATA_REQUEST = 'Переданы некорректные данные';
