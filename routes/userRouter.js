@@ -18,7 +18,7 @@ const {
   validateUserId,
   validateUser,
   validateUserAvatar,
-} = require('../utils/validation');
+} = require('../middlewares/validation');
 
 router.get(ROUTE_PATH_USER_ME, getAboutMe);
 router.get(ROUTE_PATH_USERS, getUsers);

@@ -2,6 +2,10 @@ module.exports.PORT = process.env.PORT || 3000;
 module.exports.DB_URL = 'mongodb://localhost';
 module.exports.DB_PORT = '27017';
 module.exports.DB_SCHEMA = 'mestodb';
+
+module.exports.REQUEST_RATE_LIMIT_WINDOWS_MS = 15 * 60 * 1000; // 15 minutes
+module.exports.REQUEST_RATE_LIMIT_COUNT = 100;
+
 module.exports.COOKIE_LIAVE_TIME = 3600000 * 24 * 7;
 module.exports.HTTP_ONLY = true;
 

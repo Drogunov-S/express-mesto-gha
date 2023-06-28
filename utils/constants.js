@@ -26,7 +26,6 @@ module.exports.ERR_MESSAGE_BAD_AUTH = 'Неправильные почта ил�
 module.exports.ERR_MESSAGE_MIN_VALID_CARD_NAME = 'Название должно быть не менее 2 символов';
 module.exports.ERR_MESSAGE_MAX_VALID_CARD_NAME = 'Название должно быть не более 30 символов';
 module.exports.ERR_MESSAGE_DELETE_OTHER_CARD = 'Нельзя удалить карточки других пользователей';
-// module.exports.ERR_MESSAGE_CARD_BAD_URL = 'Нельзя удалить карточки других пользователей';
 
 module.exports.ERR_MESSAGE_MIN_VALID_USER_NAME = 'Имя должно быть не менее 2 символов';
 module.exports.ERR_MESSAGE_MAX_VALID_USER_NAME = 'Имя должно быть не более 30 символов';

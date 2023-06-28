@@ -11,7 +11,7 @@ const {
 const {
   validateAuth,
   validateUserCreate,
-} = require('../utils/validation');
+} = require('../middlewares/validation');
 
 router.post(ROUTE_PATH_REGISTER, validateUserCreate, createUser);
 router.post(ROUTE_PATH_LOGIN, validateAuth, login);
