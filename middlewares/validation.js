@@ -1,6 +1,6 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 
-const regex = /http(s)?:\/\/(www.)?[a-z0-9\.\-]+\/?[a-z0-9\.\-_~:\/?#\[\]@!$&'()*+,;=]+/;
+const regex = /(https?:\/\/)?(www\.)?([A-z0-9-])*\.{1}[A-z0-9-]*(\/([\w#!:.?+=&%@\-/])*)?/;
 
 module.exports.validateUser = celebrate({
   [Segments.BODY]: Joi.object().keys({
