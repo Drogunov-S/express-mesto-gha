@@ -13,7 +13,7 @@ const {
   validateUserCreate,
 } = require('../utils/validation');
 
-router.post(ROUTE_PATH_REGISTER, validateAuth, createUser);
-router.post(ROUTE_PATH_LOGIN, validateUserCreate, login);
+router.post(ROUTE_PATH_REGISTER, validateUserCreate, createUser);
+router.post(ROUTE_PATH_LOGIN, validateAuth, login);
 
 module.exports = router;
