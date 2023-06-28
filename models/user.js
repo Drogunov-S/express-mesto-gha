@@ -9,8 +9,8 @@ const {
   ERR_MESSAGE_MAX_VALID_USER_ABOUT,
   ERR_MESSAGE_BAD_AUTH,
 } = require('../utils/constants');
-const { DEFAULT_USER_NAME, DEFAULT_USER_ABOUT } = require('../utils/config');
-const NotFoundException = require('../exceptions/notFoundException');
+const { DEFAULT_USER_NAME, DEFAULT_USER_ABOUT, DEFAULT_USER_AVATAR } = require('../utils/config');
+const AuthException = require('../exceptions/authException');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -27,11 +27,11 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
+    default: DEFAULT_USER_AVATAR,
     validate: {
       validator: (value) => validator.isURL(value),
       message: 'Введен неверный адрес картинки',
     },
-    default: 'https://yandex.ru/images/search?text=Собака%20Корги&nl=1&source=morda',
   },
   email: {
     type: String,
@@ -56,12 +56,12 @@ userSchema.statics.findByEmailCredentials = function (email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new NotFoundException(ERR_MESSAGE_BAD_AUTH));
+        return Promise.reject(new AuthException(ERR_MESSAGE_BAD_AUTH));
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new NotFoundException(ERR_MESSAGE_BAD_AUTH));
+            return Promise.reject(new AuthException(ERR_MESSAGE_BAD_AUTH));
           }
           return user;
         });
