@@ -4,14 +4,16 @@ const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const errorsHandler = require('./middlewares/errorsHandler');
 const router = require('./routes');
-const { PORT } = require('./utils/config');
+const {
+  PORT, DB_SCHEMA, DB_PORT, DB_URL,
+} = require('./utils/config');
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect(`${DB_URL}:${DB_PORT}/${DB_SCHEMA}`, {
   useNewUrlParser: true,
 });
 

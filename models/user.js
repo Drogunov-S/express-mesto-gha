@@ -7,7 +7,7 @@ const {
   ERR_MESSAGE_MAX_VALID_USER_NAME,
   ERR_MESSAGE_MIN_VALID_USER_ABOUT,
   ERR_MESSAGE_MAX_VALID_USER_ABOUT,
-  ERR_MESSAGE_BAD_AUTH,
+  ERR_MESSAGE_BAD_AUTH, ERR_MESSAGE_USER_BAD_URL_AVATAR, ERR_MESSAGE_USER_BAD_EMAIL,
 } = require('../utils/constants');
 const { DEFAULT_USER_NAME, DEFAULT_USER_ABOUT, DEFAULT_USER_AVATAR } = require('../utils/config');
 const AuthException = require('../exceptions/authException');
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     default: DEFAULT_USER_AVATAR,
     validate: {
       validator: (value) => validator.isURL(value),
-      message: 'Введен неверный адрес картинки',
+      message: ERR_MESSAGE_USER_BAD_URL_AVATAR,
     },
   },
   email: {
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (value) => validator.isEmail(value),
-      message: 'Введен неверный email адрес',
+      message: ERR_MESSAGE_USER_BAD_EMAIL,
     },
   },
   password: {

@@ -19,20 +19,26 @@ module.exports.ERROR_CAST = 'CastError';
 module.exports.ERROR_VALIDATION = 'ValidationError';
 module.exports.ERROR_NOT_FOUND = 'NotFound';
 
+module.exports.ERR_MESSAGE_SERVER_ERROR = 'Ошибка на сервере';
 module.exports.ERR_MESSAGE_NO_AUTH = 'Необходимо авторизоваться';
 module.exports.ERR_MESSAGE_BAD_AUTH = 'Неправильные почта или пароль';
 
 module.exports.ERR_MESSAGE_MIN_VALID_CARD_NAME = 'Название должно быть не менее 2 символов';
 module.exports.ERR_MESSAGE_MAX_VALID_CARD_NAME = 'Название должно быть не более 30 символов';
+module.exports.ERR_MESSAGE_DELETE_OTHER_CARD = 'Нельзя удалить карточки других пользователей';
+// module.exports.ERR_MESSAGE_CARD_BAD_URL = 'Нельзя удалить карточки других пользователей';
+
 module.exports.ERR_MESSAGE_MIN_VALID_USER_NAME = 'Имя должно быть не менее 2 символов';
 module.exports.ERR_MESSAGE_MAX_VALID_USER_NAME = 'Имя должно быть не более 30 символов';
 module.exports.ERR_MESSAGE_MIN_VALID_USER_ABOUT = 'О себе должно быть не менее 2 символов';
-module.exports.ERR_MESSAGE_DELETE_OTHER_CARD = 'Нельзя удалить карточки других пользователей';
-
 module.exports.ERR_MESSAGE_MAX_VALID_USER_ABOUT = 'О себе должно быть не более 30 символов';
+module.exports.ERR_MESSAGE_USER_BAD_URL_AVATAR = 'Введен неверный адрес картинки';
+module.exports.ERR_MESSAGE_USER_BAD_EMAIL = 'Введен неверный адрес картинки';
+
 module.exports.ERR_MESSAGE_FORBIDDEN_DATA_REQUEST = 'Переданы некорректные данные';
 module.exports.ERR_MESSAGE_FORBIDDEN_ELEMENT_ID = (elementName, id) => `${elementName} с данным _id: ${id} не найдено`;
 
+module.exports.ROUTE_PATH_ALL = '/*';
 module.exports.ROUTE_PATH_LOGIN = '/signin';
 module.exports.ROUTE_PATH_REGISTER = '/signup';
 module.exports.ROUTE_PATH_USERS = '/users';
