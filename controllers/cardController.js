@@ -40,7 +40,8 @@ const deleteCardById = (req, res, next) => {
       if (card.owner.toString() !== _id) {
         return Promise.reject(new NotAccessException('Нельзя удалить карточки других пользователей'));
       }
-      return Card.deleteOne(card);
+      return Card.deleteOne(card)
+        .then(() => res.send({ message: 'Пост удален' }));
     })
     .catch(next);
 };

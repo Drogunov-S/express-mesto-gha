@@ -1,6 +1,6 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 
-const regex = /(https?:\/\/)?[^\s~]*/;
+const regex = /(https?:\/\/)?[^\s]*\.(jpg|jpeg|png|gif)$/;
 
 module.exports.validateUser = celebrate({
   [Segments.BODY]: Joi.object().keys({
