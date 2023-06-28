@@ -14,12 +14,17 @@ const {
   ROUTE_PATH_USER_ME,
   ROUTE_PATH_USER_ME_AVATAR,
 } = require('../utils/constants');
+const {
+  validateUserId,
+  validateUser,
+  validateUserAvatar,
+} = require('../utils/validation');
 
 router.get(ROUTE_PATH_USER_ME, getAboutMe);
 router.get(ROUTE_PATH_USERS, getUsers);
-router.get(ROUTE_PATH_USERS_ID, getUserById);
+router.get(ROUTE_PATH_USERS_ID, validateUserId, getUserById);
 router.post(ROUTE_PATH_USERS, createUser);
-router.patch(ROUTE_PATH_USER_ME, updateUserById);
-router.patch(ROUTE_PATH_USER_ME_AVATAR, updateAvatarById);
+router.patch(ROUTE_PATH_USER_ME, validateUser, updateUserById);
+router.patch(ROUTE_PATH_USER_ME_AVATAR, validateUserAvatar, updateAvatarById);
 
 module.exports = router;
