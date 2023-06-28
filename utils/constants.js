@@ -8,6 +8,7 @@ module.exports.CODE_202 = 202;
 module.exports.ERROR_CODE_400 = 400;
 module.exports.ERROR_CODE_401 = 401;
 module.exports.ERROR_CODE_404 = 404;
+module.exports.ERROR_CODE_403 = 403;
 module.exports.ERROR_CODE_409 = 409;
 module.exports.ERROR_CODE_409_MESSAGE = 'Регистрация с данным eMail невозможна';
 module.exports.ERROR_CODE_500 = 500;

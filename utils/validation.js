@@ -1,6 +1,6 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 
-const regex = /(https?:\/\/)?\S*/;
+const regex = /(https?:\/\/)?[^\s~]*/;
 
 module.exports.validateUser = celebrate({
   [Segments.BODY]: Joi.object().keys({
@@ -35,5 +35,18 @@ module.exports.validateAuth = celebrate({
 module.exports.validateUserId = celebrate({
   [Segments.PARAMS]: Joi.object().keys({
     id: Joi.string().length(24).required(),
+  }),
+});
+
+module.exports.validateCardId = celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    id: Joi.string().length(24).required(),
+  }),
+});
+
+module.exports.validateCreateCard = celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().pattern(regex).required(),
   }),
 });
